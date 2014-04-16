@@ -4,7 +4,7 @@ Confunion is a library to manage configuration files.
 
 ## Features
 
-* Clojure and JAVA APIs.
+* Clojure and Java APIs.
 * Merging of multiple configuration files.
 * Supports *schemas*, for documentation and validation.
 * Configurations and schemas are written in [EDN](http://edn-format.org) format.
@@ -27,7 +27,7 @@ I have not found an existing library that satisfies all of my requirements. For 
 * [Environ](https://github.com/weavejester/environ) it's based on environment variables and system properties.
 * [Nomad](https://github.com/james-henderson/nomad) is based around the concept of hostname-based configuration, which doesn't fit so well with the use cases I had in mind.
 * [clonfig](https://github.com/mccraigmccraig/clonfig) is environment variables only.
-* [conf-er](https://github.com/TouchType/conf-er) is based on a single file, and relies on an implicit [atom](https://github.com/TouchType/conf-er/blob/master/src/conf_er.clj#L30) (an approach I'd like to avoid in this case).
+* [conf-er](https://github.com/TouchType/conf-er) is based on a single file.
 
 Plus, no existing library (that I'm aware of) supports schemas, a requirement that for me is key.
 
@@ -89,7 +89,7 @@ A schema is defined by an EDN data structure: a vector of maps, each one of them
 
 All this *parameter description* entries are mandatory.
 
-The schema currently is used only to verify if all entries are documented and all mandatory ones are present.
+The schema currently is only used to verify if all entries are documented and all mandatory ones are present.
 
 A simple example:
 
@@ -126,15 +126,15 @@ The higher-level function is:
 (require '[confunion.core :as conf])
 
 (conf/load-configuration "path/to/schema.edn"
-                         ["path/to.edn" "base/configuration/file.edn"]
-                         ["overrides/file.edn" "/path/to/inspect.edn"])
+                         ["paths/to/possible.edn" "base/configuration/files.edn"]
+                         ["overrides/files.edn" "/paths/to/inspect.edn"])
 ;; Returns the merged and validated map, or an exception with a detailed
 ;; message.
 ```
 
-This is good if you want to merge the content of a base file and an optional overrides one, both to be searched in a set of paths.
+This is good if you want to merge the content of a base file and an optional overrides one, both to be searched in an ordered sequence of paths.
 
-If you want to write a generic EDN map into an `java.util.Properties`, you can use:
+If you want to write a generic EDN map into a `java.util.Properties` object, you can use:
 
 ```clojure
 (require '[confunion.properties :as props])
@@ -145,21 +145,21 @@ If you want to write a generic EDN map into an `java.util.Properties`, you can u
 
 ### Java
 
-The Java API is a mirror of the Clojure one. You only need instantiate and use a `Confunion` object:
+The Java API is a mirror of the Clojure one (only much more verbose). You only need instantiate and use a `Confunion` object:
 
 ```java
 Confunion cu = new Confunion();
 Map configurationMap = cu.loadConfiguration("path/to/schema.edn",
                                   new ArrayList<String>() {
                                     {
-                                      add("path/to.edn");
-                                      add("base/configuration/file.edn");
+                                      add("paths/to/possible.edn");
+                                      add("base/configuration/files.edn");
                                     }
                                   },
                                   new ArrayList<String>() {
                                     {
-                                      add("overrides/file.edn");
-                                      add("/path/to/inspect.edn");
+                                      add("overrides/files.edn");
+                                      add("/paths/to/inspect.edn");
                                     }
                                   });
 

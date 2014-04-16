@@ -1,0 +1,6 @@
+[{:schema/param :a
+  :schema/doc "A very useful configuration"
+  :schema/mandatory false}
+ {:schema/param :b
+  :schema/doc "Some other useful configuration parameter."
+  :schema/mandatory true}]

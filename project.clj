@@ -1,4 +1,4 @@
-(defproject me.manuelp/confunion "0.1.1-SNAPSHOT"
+(defproject me.manuelp/confunion "0.1.1"
   :description "Library for managing configuration based on EDN files."
   :url "http://github.com/manuelp/confunion"
   :license {:name "Eclipse Public License"
@@ -11,5 +11,5 @@
   :source-paths ["src/clojure"]
   :test-paths ["test/clojure"]
   :java-source-paths ["src/java"]
-  :javac-options ["-target" "1.7"
-                  "-source" "1.7"])
+  :javac-options ["-target" "1.6"
+                  "-source" "1.6"])

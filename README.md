@@ -81,7 +81,7 @@ The surface of this library is quite small, basically there are only two entry p
 
 ### Schema Format
 
-A schema is defined by an EDN data structure: a vector of maps, each one of them is a description of a property that a configuration map should (or may) have. Every *parameter description* should have three properties:
+A schema is defined by an EDN data structure (see [here](https://github.com/wagjo/serialization-formats) for a comparison between EDN and JSON): a vector of maps, each one of them is a description of a property that a configuration map should (or may) have. Every *parameter description* should have three properties:
 
 * `:schema/param`: the keyword of the parameter (it's name, or code if you want).
 * `:schema/doc`: a documentation string (which is useful both for documentation and useful error messages).

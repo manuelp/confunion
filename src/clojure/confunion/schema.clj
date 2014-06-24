@@ -68,10 +68,7 @@
                   (check-schema-param param-desc :schema/type)
                   (check-param-value param-desc
                                      :schema/type
-                                     #{:schema.type/string
-                                       :schema.type/boolean
-                                       :schema.type/number
-                                       :schema.type/any}))))
+                                     (keys value-types)))))
 
 (defn validate-schema
   "Validates a configuration schema, checking if it's a vector and

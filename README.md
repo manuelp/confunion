@@ -86,6 +86,11 @@ A schema is defined by an EDN data structure (see [here](https://github.com/wagj
 * `:schema/param`: the keyword of the parameter (it's name, or code if you want).
 * `:schema/doc`: a documentation string (which is useful both for documentation and useful error messages).
 * `:schema/mandatory`: a boolean that indicates if the described parameter is mandatory or not.
+* `:schema/type`: type of the valid parameter values. One of:
+  * `:schema.type/string`
+  * `:schema.type/boolean`
+  * `:schema.type/number`
+  * `:schema.type/any` (this is a catch-all, to use *only* if none of the existing keys describe the value type)
 
 All this *parameter description* entries are mandatory.
 
@@ -96,10 +101,12 @@ A simple example:
 ```clojure
 [{:schema/param :a
   :schema/doc "A very useful configuration"
-  :schema/mandatory false}
+  :schema/mandatory false
+  :schema/type :schema.type/string}
  {:schema/param :b
   :schema/doc "Some other useful configuration parameter."
-  :schema/mandatory true}]
+  :schema/mandatory true
+  :schema/type :schema.type/boolean}]
 ```
 
 ### Configuration Map Format

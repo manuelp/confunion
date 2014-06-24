@@ -17,10 +17,17 @@
              :param {}}
             {:error :missing-schema-entry
              :entry :schema/mandatory
+             :param {}}
+            {:error :missing-schema-entry
+             :entry :schema/type
              :param {}}]
            (validate-schema [{}])))
     (is (= [{:error :missing-schema-entry
              :entry :schema/mandatory
+             :param {:schema/param :a
+                     :schema/doc "docstring"}}
+            {:error :missing-schema-entry
+             :entry :schema/type
              :param {:schema/param :a
                      :schema/doc "docstring"}}]
            (validate-schema [{:schema/param :a
@@ -28,24 +35,32 @@
     (is (= []
            (validate-schema [{:schema/param :a
                               :schema/doc "docstring"
-                              :schema/mandatory true}]))))
+                              :schema/mandatory true
+                              :schema/type :schema.type/string}]))))
   (testing "failed validations should produce a detailed exception"
     (is (= [{:schema/param :a
              :schema/doc "docstring"
-             :schema/mandatory true}]
+             :schema/mandatory true
+             :schema/type :schema.type/string}]
            (verify-schema [{:schema/param :a
                             :schema/doc "docstring"
-                            :schema/mandatory true}])))
+                            :schema/mandatory true
+                            :schema/type :schema.type/string}])))
     (is (thrown-with-msg? Exception #"Invalid schema definition:\n\{:error :invalid-schema"
                           (verify-schema {})))
     (is (thrown-with-msg? Exception #"Invalid schema definition:\n\{:error :missing-schema-entry"
                           (verify-schema [{:schema/param :a
                                            :schema/doc "docstring"}])))))
 
-(defn schema-param [k mandatory]
-  {:schema/param k
-   :schema/doc "..."
-   :schema/mandatory mandatory})
+(defn schema-param
+  ([k mandatory] {:schema/param k
+                  :schema/doc "..."
+                  :schema/mandatory mandatory
+                  :schema/type :schema.type/string})
+  ([k mandatory type] {:schema/param k
+                       :schema/doc "..."
+                       :schema/mandatory mandatory
+                       :schema/type type}))
 
 (deftest configuration-validations
   (testing "configuration should be valid according to a schema"
@@ -53,7 +68,8 @@
     (is (= [] (validate-conf {:a 42}
                              [{:schema/param :a
                                :schema/doc "docstring"
-                               :schema/mandatory true}]))))
+                               :schema/mandatory true
+                               :schema/type :schema.type/number}]))))
   (testing "configuration should not contain only properties described in the schema"
     (is (= [{:error :unknown
              :param [:b "unknown"]}]
@@ -67,9 +83,22 @@
   (testing "verification should generate an informative exception when the configuration is invalid"
     (is (= {:b 2}
            (verify-conf {:b 2}
-                        [(schema-param :b true)])))
+                        [(schema-param :b true :schema.type/number)])))
     (is (thrown-with-msg? Exception #"Invalid configuration:\n\{:error :missing"
                           (verify-conf {}
-                                       [(schema-param :b true)])))))
+                                       [(schema-param :b true)]))))
+  (testing "parameter values should be checked by type"
+    (is (= [{:error :type-error
+             :param (schema-param :a true :schema.type/string)
+             :expected :schema.type/string
+             :actual java.lang.Boolean}]
+           (validate-conf {:a false}
+                          [(schema-param :a true :schema.type/string)])))
+    (is (= [{:error :type-error
+             :param (schema-param :a true :schema.type/boolean)
+             :expected :schema.type/boolean
+             :actual java.lang.String}]
+           (validate-conf {:a "false"}
+                          [(schema-param :a true :schema.type/boolean)])))))
 
 #_(run-tests)

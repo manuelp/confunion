@@ -13,7 +13,8 @@
                             :b "hello"}))
       (spit file-schema (pr-str [{:schema/param :a
                                   :schema/doc "docstring"
-                                  :schema/mandatory true}]))
+                                  :schema/mandatory true
+                                  :schema/type :schema.type/number}]))
       (f)
       (finally
        (do

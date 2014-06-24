@@ -49,9 +49,9 @@
 
 (defn- check-param-value
   "Check if the value associated to the schema-entry key is among the possible values."
-  [param-desc schema-entry possible-values]
+  [param-desc schema-entry]
   (when (contains? param-desc schema-entry)
-    (if (contains? possible-values (schema-entry param-desc))
+    (if (contains? value-types (schema-entry param-desc))
       :ok
       {:error :wrong-value-type
        :entry schema-entry
@@ -66,9 +66,7 @@
                   (check-schema-param param-desc :schema/doc)
                   (check-schema-param param-desc :schema/mandatory)
                   (check-schema-param param-desc :schema/type)
-                  (check-param-value param-desc
-                                     :schema/type
-                                     (keys value-types)))))
+                  (check-param-value param-desc :schema/type))))
 
 (defn validate-schema
   "Validates a configuration schema, checking if it's a vector and
@@ -132,12 +130,12 @@
           :else true)))
 
 (defn get-param-value
-  "Takes the value in the configuration map `9` corresponding to the
+  "Takes the value in the configuration map `m` corresponding to the
    parameter described by `param`."
   [m param]
   (get m (:schema/param param)))
 
-(defn-
+(defn- check-type
   "Checks if the parameter described by the *parameter description* `param`,
    if present in the configuration map `m`, is of the right type.
    Returns `:ok` if the parameter is present in `m` and of the right type,
@@ -145,7 +143,6 @@
 
    Note: it assumes that checks about presence of mandatory parameters is
    done by other functions."
-  check-type
   [m param]
   (cond (not (right-type? m param)) {:error :type-error
                                      :param param

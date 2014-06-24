@@ -1,6 +1,8 @@
 [{:schema/param :a
   :schema/doc "A very useful configuration"
-  :schema/mandatory false}
+  :schema/mandatory false
+  :schema/type :schema.type/number}
  {:schema/param :b
   :schema/doc "Some other useful configuration parameter."
-  :schema/mandatory true}]
+  :schema/mandatory true
+  :schema/type :schema.type/any}]

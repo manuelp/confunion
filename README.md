@@ -11,6 +11,16 @@ Confunion is a library to manage configuration files.
 * Informative error messages.
 * Import/overwrite configuration in `java.util.Properties` objects (for interoperability purposes).
 
+## Changelog
+
+### 0.2.0
+
+Added basic typing support to schemas.
+
+### 0.1.0
+
+First feature-complete version. Supports multiple configuration files and a schema with cross-validations.
+
 ## Motivation
 
 I needed a way to easily manage environment-specific configuration files for an application that is installed in multiple heterogeneous environments: development machines, QA servers, pre-production and production installations for several customers, etc. In short, *I need a way to load and validate against a schema an EDN map by merging the content of a base file with an (optional) override one, both read from a set of possible paths in which to find them*. The schema is particularly important in my case for documentation an validation purposes (so that I can keep the application and various environment-specific configurations in sync).

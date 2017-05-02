@@ -18,6 +18,7 @@ Confunion is a library to manage configuration files.
 * Upgraded dependencies:
     * clojure 1.8.0
     * tools.logging 0.3.1
+* Failed validation exception contains human-readable error descriptions.
 
 ### 0.2.0
 

@@ -46,9 +46,9 @@
                             :schema/doc "docstring"
                             :schema/mandatory true
                             :schema/type :schema.type/string}])))
-    (is (thrown-with-msg? Exception #"Invalid schema definition:\n\{:error :invalid-schema"
+    (is (thrown-with-msg? Exception #"Invalid schema definition:\n- Invalid schema:.*"
                           (verify-schema {})))
-    (is (thrown-with-msg? Exception #"Invalid schema definition:\n\{:error :missing-schema-entry"
+    (is (thrown-with-msg? Exception #"Invalid schema definition:\n- Schema parameter \{:schema/param :a.*is missing in the entry.*"
                           (verify-schema [{:schema/param :a
                                            :schema/doc "docstring"}])))))
 
@@ -84,7 +84,7 @@
     (is (= {:b 2}
            (verify-conf {:b 2}
                         [(schema-param :b true :schema.type/number)])))
-    (is (thrown-with-msg? Exception #"Invalid configuration:\n\{:error :missing"
+    (is (thrown-with-msg? Exception #"Invalid configuration:\n- Missing mandatory parameter required by the schema: \(:b"
                           (verify-conf {}
                                        [(schema-param :b true)]))))
   (testing "parameter values should be checked by type"

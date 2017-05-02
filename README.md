@@ -13,7 +13,7 @@ Confunion is a library to manage configuration files.
 
 ## Changelog
 
-### 0.2.1-SNAPSHOT
+### 0.2.1
 * Moved source and target to JVM 1.7
 * Upgraded dependencies:
     * clojure 1.8.0

@@ -12,4 +12,6 @@
   :test-paths ["test/clojure"]
   :java-source-paths ["src/java"]
   :javac-options ["-target" "1.7"
-                  "-source" "1.7"])
+                  "-source" "1.7"]
+
+  :signing {:gpg-key "077AB1AC"})

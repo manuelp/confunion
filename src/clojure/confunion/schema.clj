@@ -203,15 +203,20 @@
       conf
       (generate-exception "Invalid configuration" errors))))
 
+(defn compose-schema
+  [& fragments]
+  (->> fragments
+       flatten
+       (group-by :schema/param)
+       (map (comp last second))))
+
 ;; We also want to support the composition of a schema from multiple
 ;; fragments. Order is important since a parameter can be overridden:
 ;; the final parameter spec will be the last one.
-(defn compose-schema
+(defn load-schema
   "Load schema fragments from multiple files and compose a single
   schema."
   [& paths]
   (->> paths
        (map load-edn)
-       flatten
-       (group-by :schema/param)
-       (map (comp last second))))
+       compose-schema))

@@ -76,7 +76,7 @@
         additional-path (first-existing additional-paths)]
     (cond (nil? base-path) (throw (Exception. "Base schema file not found!"))
           (nil? additional-path) (load-edn base-path)
-          :else (schema/compose-schema base-path additional-path))))
+          :else (schema/load-schema base-path additional-path))))
 
 (defn compose-configuration
   "Builds a configuration map by merging a base configuration map with

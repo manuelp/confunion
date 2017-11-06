@@ -50,7 +50,49 @@
                           (verify-schema {})))
     (is (thrown-with-msg? Exception #"Invalid schema definition:\n- Schema parameter \{:schema/param :a.*is missing in the entry.*"
                           (verify-schema [{:schema/param :a
-                                           :schema/doc "docstring"}])))))
+                                           :schema/doc "docstring"}]))))
+  (testing "can compose a schema from multiple fragments"
+    (is (= [{:schema/param :a
+             :schema/doc "docstring"
+             :schema/mandatory true
+             :schema/type :schema.type/string}] 
+           (compose-schema [{:schema/param :a
+                             :schema/doc "docstring"
+                             :schema/mandatory true
+                             :schema/type :schema.type/string}] 
+                           [])))
+    (is (= [{:schema/param :a
+             :schema/doc "overridden"
+             :schema/mandatory false
+             :schema/type :schema.type/boolean}] 
+           (compose-schema [{:schema/param :a
+                             :schema/doc "docstring"
+                             :schema/mandatory true
+                             :schema/type :schema.type/string}]
+                           [{:schema/param :a
+                             :schema/doc "overridden"
+                             :schema/mandatory false
+                             :schema/type :schema.type/boolean}])))
+    (is (= [{:schema/param :a
+             :schema/doc "overridden"
+             :schema/mandatory false
+             :schema/type :schema.type/boolean}
+            {:schema/param :b
+             :schema/doc "another parameter"
+             :schema/mandatory true
+             :schema/type :schema.type/string}] 
+           (compose-schema [{:schema/param :a
+                             :schema/doc "docstring"
+                             :schema/mandatory true
+                             :schema/type :schema.type/string}]
+                           [{:schema/param :a
+                             :schema/doc "overridden"
+                             :schema/mandatory false
+                             :schema/type :schema.type/boolean}]
+                           [{:schema/param :b
+                             :schema/doc "another parameter"
+                             :schema/mandatory true
+                             :schema/type :schema.type/string}])))))
 
 (defn schema-param
   ([k mandatory] {:schema/param k

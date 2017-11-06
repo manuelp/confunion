@@ -1,5 +1,4 @@
 # confunion
-
 Confunion is a library to manage configuration files.
 
 ## Features
@@ -12,21 +11,7 @@ Confunion is a library to manage configuration files.
 * Import/overwrite configuration in `java.util.Properties` objects (for interoperability purposes).
 
 ## Changelog
-
-### 0.2.1
-* Moved source and target to JVM 1.7
-* Upgraded dependencies:
-    * clojure 1.8.0
-    * tools.logging 0.3.1
-* Failed validation exception contains human-readable error descriptions.
-
-### 0.2.0
-
-Added basic typing support to schemas.
-
-### 0.1.0
-
-First feature-complete version. Supports multiple configuration files and a schema with cross-validations.
+See the [changelog](Changelog.md) file.
 
 ## Motivation
 

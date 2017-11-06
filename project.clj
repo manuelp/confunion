@@ -1,4 +1,4 @@
-(defproject me.manuelp/confunion "0.3.0-SNAPSHOT"
+(defproject me.manuelp/confunion "0.3.0"
   :description "Library for managing configuration based on EDN files."
   :url "http://github.com/manuelp/confunion"
   :license {:name "Eclipse Public License"

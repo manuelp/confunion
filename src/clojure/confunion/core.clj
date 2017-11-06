@@ -66,3 +66,28 @@
         conf (read-configuration base-paths choices)]
     (schema/verify-conf conf schema)))
 
+
+;; However, we also want to support the composition of the schema too.
+
+(defn read-schema
+  "Compose a global schema by merging multiple schema files."
+  [base-paths additional-paths]
+  (let [base-path (first-existing base-paths)
+        additional-path (first-existing additional-paths)]
+    (cond (nil? base-path) (throw (Exception. "Base schema file not found!"))
+          (nil? additional-path) (load-edn base-path)
+          :else (schema/compose-schema base-path additional-path))))
+
+(defn compose-configuration
+  "Builds a configuration map by merging a base configuration map with
+  an optional override one, and validating the final result against a
+  schema. The schema is also build by compositing a base schema file
+  and an ordered set of extension files. Both final data
+  structures (configuration and schema) are validated by itself then
+  against one another. If everything is good, the final configuration
+  is returned, otherwise it generates an exception with a complete
+  description of the problems."
+  [schema-base-paths schema-choices base-paths choices]
+  (let [schema (read-schema schema-base-paths schema-choices)
+        conf (read-configuration base-paths choices)]
+    (schema/verify-conf conf schema)))

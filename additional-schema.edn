@@ -1,0 +1,8 @@
+[{:schema/param :a
+  :schema/doc "Overridden parameter"
+  :schema/mandatory true
+  :schema/type :schema.type/string}
+ {:schema/param :c
+  :schema/doc "An additional parameter."
+  :schema/mandatory true
+  :schema/type :schema.type/string}]

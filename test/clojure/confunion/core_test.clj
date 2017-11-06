@@ -6,7 +6,8 @@
 (defn a-b-files-fixture [f]
   (let [file-a (java.io.File. "a.edn")
         file-b (java.io.File. "b.edn")
-        file-schema (java.io.File. "conf-schema.edn")]
+        file-schema (java.io.File. "conf-schema.edn")
+        file-additional-schema (java.io.File. "additional-schema.edn")]
     (try
       (spit file-a (pr-str {:a 1}))
       (spit file-b (pr-str {:a 2
@@ -15,12 +16,21 @@
                                   :schema/doc "docstring"
                                   :schema/mandatory true
                                   :schema/type :schema.type/number}]))
+      (spit file-additional-schema (pr-str [{:schema/param :a
+                                             :schema/doc "docstring"
+                                             :schema/mandatory true
+                                             :schema/type :schema.type/number}
+                                            {:schema/param :b
+                                             :schema/doc "another parameter"
+                                             :schema/mandatory true
+                                             :schema/type :schema.type/string}]))
       (f)
       (finally
        (do
          (.delete file-a)
          (.delete file-b)
-         (.delete file-schema))))))
+         (.delete file-schema)
+         (.delete file-additional-schema))))))
 
 (use-fixtures :once a-b-files-fixture)
 
@@ -57,5 +67,24 @@
     (is (thrown-with-msg? Exception #"Invalid configuration"
                           (load-configuration "conf-schema.edn" ["not.edn" "a.edn"] ["b.edn"])))
     (is (= {:a 1} (load-configuration "conf-schema.edn" ["a.edn"] [])))))
+
+(deftest schema-composition
+  (testing "should compose a schema from multiple files"
+    (is (= [{:schema/param :a
+             :schema/doc "docstring"
+             :schema/mandatory true
+             :schema/type :schema.type/number}
+            {:schema/param :b
+             :schema/doc "another parameter"
+             :schema/mandatory true
+             :schema/type :schema.type/string}]
+           (read-schema ["conf-schema.edn"] 
+                        ["unknown-schema.edn" "additional-schema.edn"]))))
+  (testing "should validate configuration against composed schema"
+    (is (= {:a 2, :b "hello"}
+           (compose-configuration ["conf-schema.edn"] 
+                                  ["unknown-schema.edn" "additional-schema.edn"]
+                                  ["a.edn"] 
+                                  ["unknown-b.edn" "b.edn"])))))
 
 #_(run-tests)
